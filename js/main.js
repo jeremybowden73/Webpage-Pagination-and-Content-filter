@@ -1,9 +1,14 @@
 // create a collection of all the list items with class "student-item"
 const completeStudentList = document.querySelectorAll(".student-item");
 
+// to initialise, call the showPage function and pass to it the list of
+// students and the initial page number to view (1)
+showPage(completeStudentList, 1);
+
 // function to display a group of 10 students
 // using startStudent for the first and endStudent for the last
 function showPage(list, pageNumber) {
+  console.log(completeStudentList);
   // scroll to the top of page
   window.scrollTo(0, 0);
   // initially, hide all of the list items
@@ -24,12 +29,13 @@ function showPage(list, pageNumber) {
     list[i].style.display = "block";
   }
 
-  // call the function to add the page links pagination to the foot of the page
+  // call the functions to add the page links pagination to the foot of the page
+  // and show the search box at the top of the page
   appendPageLinks(completeStudentList, pageNumber);
-  showSearch();
+  showSearch(completeStudentList);
 }
 
-function showSearch() {
+function showSearch(completeStudentList) {
   // need to check if a div element with class "student-search" (i.e. the search box)
   // already exists, and if so we need to remove it because it will be replaced with a new one
   let oldSearchField = document.querySelector(".student-search");
@@ -53,6 +59,38 @@ function showSearch() {
   let searchButton = document.createElement("button");
   searchButton.textContent = "Search";
   searchField.appendChild(searchButton);
+  //
+  //
+  // event listener to fire the searchStudents function when the search button is clicked,
+  // passing to it the contents of the input tag
+  searchButton.addEventListener("click", () => {
+    let searchText = input.value.toLowerCase();
+    searchStudents(completeStudentList, searchText);
+  });
+}
+
+function searchStudents(completeStudentList, name) {
+  // initially, hide all of the list items
+  for (let i = 0; i < completeStudentList.length; i++) {
+    completeStudentList[i].style.display = "none";
+  }
+  // scroll to the top of page
+  window.scrollTo(0, 0);
+  // search each student list item for the name that was passed to this function, and
+  // when found change the display to block and add a class of "foundBySearch" to the list item
+  let re = new RegExp(name);
+  for (let i = 0; i < completeStudentList.length; i++) {
+    if (re.test(completeStudentList[i].innerText) === true) {
+      completeStudentList[i].style.display = "block";
+      completeStudentList[i].className += " foundBySearch";
+    }
+  }
+  // create a new list of student list items which only contains the ones found by the search
+  const listOfFoundStudents = document.querySelectorAll(".foundBySearch");
+  // call the functions to add the page links pagination to the foot of the page
+  // and show the search box at the top of the page
+  appendPageLinks(listOfFoundStudents, 1);
+  showSearch(completeStudentList);
 }
 
 function appendPageLinks(list, active) {
@@ -111,7 +149,3 @@ function appendPageLinks(list, active) {
     }
   });
 }
-
-// to initialise, call the showPage function and pass to it the list of
-// students and the initial page number to view (1)
-showPage(completeStudentList, 1);
