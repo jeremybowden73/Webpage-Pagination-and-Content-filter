@@ -70,6 +70,11 @@ function showSearch(completeStudentList) {
 }
 
 function searchStudents(completeStudentList, name) {
+  // remove any "foundBySearch" class names from student list items which
+  // will have been created by any previous searches
+  for (let i = 0; i < completeStudentList.length; i++) {
+    completeStudentList[i].classList.remove("foundBySearch");
+  }
   // initially, hide all of the list items
   for (let i = 0; i < completeStudentList.length; i++) {
     completeStudentList[i].style.display = "none";
@@ -82,12 +87,13 @@ function searchStudents(completeStudentList, name) {
   for (let i = 0; i < completeStudentList.length; i++) {
     if (re.test(completeStudentList[i].innerText) === true) {
       completeStudentList[i].style.display = "block";
-      completeStudentList[i].className += " foundBySearch";
+      completeStudentList[i].classList.add("foundBySearch");
     }
   }
   // create a new list of student list items which only contains the ones found by the search
   const listOfFoundStudents = document.querySelectorAll(".foundBySearch");
-  // call the functions to add the page links pagination to the foot of the page
+  // call the functions to add the page links pagination to the foot of the page (only passing
+  // the list of searched students this time)
   // and show the search box at the top of the page
   appendPageLinks(listOfFoundStudents, 1);
   showSearch(completeStudentList);
