@@ -26,20 +26,47 @@ function showPage(list, pageNumber) {
 
   // call the function to add the page links pagination to the foot of the page
   appendPageLinks(completeStudentList, pageNumber);
+  showSearch();
+}
+
+function showSearch() {
+  // need to check if a div element with class "student-search" (i.e. the search box)
+  // already exists, and if so we need to remove it because it will be replaced with a new one
+  let oldSearchField = document.querySelector(".student-search");
+  if (oldSearchField !== null) {
+    oldSearchField.parentNode.removeChild(oldSearchField);
+  }
+  // select the div into which the new search box will be placed
+  let pageHeader = document.querySelector(".page-header");
+  // create a div element for the search field and give it a class name "student-search"
+  // and drop it into pageHeader
+  let searchField = document.createElement("div");
+  searchField.className = "student-search";
+  pageHeader.appendChild(searchField);
+  // create an element for the input tag and give it a placeholder string
+  // and drop it into the search field
+  let input = document.createElement("input");
+  input.placeholder = "Search for students...";
+  searchField.appendChild(input);
+  // create the search button element, give it text content
+  // and drop it into the search field
+  let searchButton = document.createElement("button");
+  searchButton.textContent = "Search";
+  searchField.appendChild(searchButton);
 }
 
 function appendPageLinks(list, active) {
-  // determine how many pages are needed for this student list
-  let numberOfPages = Math.ceil(list.length / 10);
-  // select the main page div element
-  let pageDiv = document.querySelector(".page");
-  // need to check if a div element with class "pagination" already exists, and if
-  // so we need to remove it because it will be replaced with a new one
+  // need to check if a div element with class "pagination" (i.e. the pagination links)
+  // already exists, and if so remove it because it will be replaced with a new one
   let oldPageLink = document.querySelector("div.pagination");
   if (oldPageLink !== null) {
     oldPageLink.parentNode.removeChild(oldPageLink);
   }
-  // now we can create the new page link div, with the class name "pagination"
+  // determine how many pages are needed for this student list
+  let numberOfPages = Math.ceil(list.length / 10);
+  // select the main page div element
+  let pageDiv = document.querySelector(".page");
+  // create the new page link div, with the class name "pagination"
   let pageLinkDiv = document.createElement("div");
   pageLinkDiv.className = "pagination";
   // append the page link div to the main page div
@@ -88,4 +115,3 @@ function appendPageLinks(list, active) {
 // to initialise, call the showPage function and pass to it the list of
 // students and the initial page number to view (1)
 showPage(completeStudentList, 1);
-
