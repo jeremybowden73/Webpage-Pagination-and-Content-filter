@@ -8,8 +8,7 @@ showPage(completeStudentList, 1);
 // function to display a group of 10 students
 // using startStudent for the first and endStudent for the last
 function showPage(list, pageNumber) {
-  console.log(list);
-  // scroll to the top of page
+  // scroll to top of page
   window.scrollTo(0, 0);
   // initially, hide all of the list items
   for (let i = 0; i < list.length; i++) {
@@ -68,34 +67,30 @@ function showSearchBox(list) {
 }
 
 function searchStudents(list, name) {
-  // remove any "foundBySearch" class names from student list items which
-  // will have been created by any previous searches
-  for (let i = 0; i < list.length; i++) {
-    list[i].classList.remove("foundBySearch");
-  }
-  // initially, hide all of the list items
-  for (let i = 0; i < list.length; i++) {
-    list[i].style.display = "none";
-  }
-  // scroll to the top of page
-  window.scrollTo(0, 0);
-  // search each student list item for the name that was passed to this function, and
-  // when found change the display to block and add a class of "foundBySearch" to the list item
+  console.log("NOW");
+
+  // convert the node list to an array so array methods can be used on it
+  let listAsArray = Array.from(list);
+  // create a regex variable for searching the list
   let re = new RegExp(name);
-  for (let i = 0; i < list.length; i++) {
-    if (re.test(list[i].innerText) === true) {
-      list[i].classList.add("foundBySearch");
-    }
-  }
-  // create a new list of student list items which only contains the ones found by the search
-  const listOfFoundStudents = document.querySelectorAll(".foundBySearch");
-  // if the search yielded zero results call the appropriate function,
-  // else call the function to refresh the page with the list of students found by the search
-  if (listOfFoundStudents.length === 0) {
+
+  // filter the array for only those whose innerText property matches the regex search term
+  let foundArray = listAsArray.filter(text => re.test(text.innerText) === true);
+  //
+  console.log("foundArray...");
+  console.log(foundArray);
+  // if there are no matches, the array length is zero, so inform the user
+  // before refreshing the display with the ful list
+  if (foundArray.length === 0) {
     noSearchItemsFound();
     showPage(list, 1);
   } else {
-    showPage(listOfFoundStudents, 1);
+    // hide all of the list items
+    for (let i = 0; i < list.length; i++) {
+      list[i].style.display = "none";
+    }
+    // call the showPage function to display the new search results
+    showPage(foundArray, 1);
   }
 }
 
