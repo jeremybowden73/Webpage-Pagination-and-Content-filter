@@ -67,23 +67,29 @@ function showSearchBox(list) {
 }
 
 function searchStudents(list, name) {
-  console.log("NOW");
-
   // convert the node list to an array so array methods can be used on it
   let listAsArray = Array.from(list);
   // create a regex variable for searching the list
   let re = new RegExp(name);
 
-  // filter the array for only those whose innerText property matches the regex search term
+  // filter the array for only the elements whose innerText property
+  // matches the regex search term
   let foundArray = listAsArray.filter(text => re.test(text.innerText) === true);
-  //
-  console.log("foundArray...");
-  console.log(foundArray);
   // if there are no matches, the array length is zero, so inform the user
-  // before refreshing the display with the ful list
+  // before refreshing the display with the full list
   if (foundArray.length === 0) {
-    noSearchItemsFound();
-    showPage(list, 1);
+    // insert a message to tell the user no matching search results
+    let messageDiv = document.createElement("div");
+    let existingNode = document.querySelector(".page-header");
+    let parentDiv = document.querySelector(".page-header").parentNode;
+    parentDiv.insertBefore(messageDiv, existingNode);
+    messageDiv.className = "pagination";
+    messageDiv.style.color = "red";
+    messageDiv.style.fontSize = "2em";
+    messageDiv.innerHTML =
+      "SORRY...<br>YOUR SEARCH YIELDED NO RESULTS<br><br>PAGE WILL REFRESH SHORTLY";
+    // timeout to reload the lists in 5 seconds
+    let timeoutID = window.setTimeout(showPage, 5000, list, 1);
   } else {
     // hide all of the list items
     for (let i = 0; i < list.length; i++) {
@@ -94,16 +100,16 @@ function searchStudents(list, name) {
   }
 }
 
-function noSearchItemsFound() {
-  alert("SERCH YIELDED NOUGHT");
-}
-
 function appendPageLinks(list, active) {
-  // need to check if a div element with class "pagination" (i.e. the pagination links)
-  // already exists, and if so remove it because it will be replaced with a new one
-  let oldPageLink = document.querySelector("div.pagination");
-  if (oldPageLink !== null) {
-    oldPageLink.parentNode.removeChild(oldPageLink);
+  // need to check if any div elements with class "pagination" (i.e.
+  // the message for no search results or the pagination links) already
+  // exist, and if so remove them because they will be replaced with a new
+  // pagination link
+  let oldPageLinks = document.querySelectorAll("div.pagination");
+  let m = 0;
+  while (m < oldPageLinks.length) {
+    oldPageLinks[m].parentNode.removeChild(oldPageLinks[m]);
+    m++;
   }
   // determine how many pages are needed for this student list
   let numberOfPages = Math.ceil(list.length / 10);
